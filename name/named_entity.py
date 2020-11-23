@@ -1,5 +1,4 @@
 import csv
-from typing import List
 
 
 class NamedEntity:
@@ -51,6 +50,7 @@ class NamedEntity:
                 '; '.join(e.english_names),
                 '; '.join(e.japanese_names),
             ])
+
 
 def _str_list(str_or_list):
     if not str_or_list:

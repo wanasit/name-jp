@@ -5,6 +5,7 @@ import re
 from name import NamedEntity
 from bs4 import BeautifulSoup
 
+
 def extract_name_from_wiki_page(page_url):
     res = requests.get(page_url)
     page = BeautifulSoup(res.text, features="html.parser")
@@ -34,8 +35,6 @@ def extract_name_from_wiki_page(page_url):
     name_jp = elem_name_jp.get_text()
     name_en = re.sub(r'\s*\(.*\)', '', name_en)
     return name_en, name_jp
-
-
 
 
 def extract_name_from_paragraph_text(text: str):
