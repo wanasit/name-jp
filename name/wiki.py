@@ -34,21 +34,23 @@ def extract_name_from_wiki_page(page_url):
     name_en = elem_name.get_text()
     name_jp = elem_name_jp.get_text()
     name_en = re.sub(r'\s*\(.*\)', '', name_en)
-    return name_en, name_jp
+    return NamedEntity(page_url, name_en, name_jp)
 
 
 def extract_name_from_paragraph_text(text: str):
     """
     Extracting names from "Name (名前, ..." pattern
     """
-    pattern = re.compile(r'([\w\s.,]+)\s\(([\w\s]+)[).,;]')
+    pattern = re.compile(r'([\w\s.,\']+)\s*\([A-Za-z\s]*([\w\s]+)[).,;]')
     match = pattern.match(text)
     if not match:
         return None
 
-    primary_name = match[1]
-    alt_names = match[2]
-    if ' or ' in alt_names:
-        alt_names = alt_names.split(' or ')
+    primary_name = match[1].strip()
+    alt_names = match[2].strip()
+    alt_names = alt_names.split(' or ')
+    alt_names = [n for n in alt_names if not all(ord(c) < 128 for c in n)]
+    if not alt_names:
+        return None
 
     return primary_name, alt_names

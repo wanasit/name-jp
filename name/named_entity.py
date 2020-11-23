@@ -1,18 +1,23 @@
 import csv
+from typing import List, TextIO
 
 
 class NamedEntity:
-    def __init__(self, src_url, english_names=None, japanese_names=None):
+    src_url: str
+    english_names: List[str]
+    japanese_names: List[str]
+
+    def __init__(self, src_url: str, english_names=None, japanese_names=None):
         self.src_url = src_url
         self.english_names = _str_list(english_names)
         self.japanese_names = _str_list(japanese_names)
 
     @property
-    def english_name(self):
+    def english_name(self) -> str:
         return self.english_names[0] if self.english_names else None
 
     @property
-    def japanese_name(self):
+    def japanese_name(self) -> str:
         return self.japanese_names[0] if self.japanese_names else None
 
     def __repr__(self):
@@ -26,7 +31,7 @@ class NamedEntity:
         return False
 
     @staticmethod
-    def from_csv(fp):
+    def from_csv(fp: TextIO) -> List['NamedEntity']:
         names = []
         reader = csv.reader(fp)
         next(reader)  # Expect header
@@ -38,7 +43,7 @@ class NamedEntity:
         return names
 
     @staticmethod
-    def to_csv(entities, fp):
+    def to_csv(entities: List['NamedEntity'], fp: TextIO):
         # sort entities by src_url
         # header: src_url, english_names, japanese_names
         # serialize
@@ -52,7 +57,7 @@ class NamedEntity:
             ])
 
 
-def _str_list(str_or_list):
+def _str_list(str_or_list) -> List[str]:
     if not str_or_list:
         return []
 
